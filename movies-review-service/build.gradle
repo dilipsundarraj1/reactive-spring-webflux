@@ -35,6 +35,12 @@ dependencies {
 	testImplementation 'io.projectreactor:reactor-test'
 }
 
+sourceSets{
+	test {
+		java.srcDirs = ['src/test/java/unit', 'src/test/java/intg']
+	}
+}
+
 test {
 	useJUnitPlatform()
 }
