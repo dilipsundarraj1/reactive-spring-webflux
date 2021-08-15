@@ -21,12 +21,26 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
+	//lombok
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
+
+	//test
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'io.projectreactor:reactor-test'
+
+	// wiremock
+	testImplementation 'org.springframework.cloud:spring-cloud-starter-contract-stub-runner:3.0.3'
+
 }
 
 test {
 	useJUnitPlatform()
+}
+
+sourceSets{
+	test {
+		java.srcDirs = ['src/test/java/unit', 'src/test/java/intg']
+	}
 }
