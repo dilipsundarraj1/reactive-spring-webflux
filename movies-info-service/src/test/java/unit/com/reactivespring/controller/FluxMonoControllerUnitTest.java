@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
-public class FluxMonoControllerIntgTest {
+public class FluxMonoControllerUnitTest {
 
     @Autowired
     WebTestClient webTestClient;
