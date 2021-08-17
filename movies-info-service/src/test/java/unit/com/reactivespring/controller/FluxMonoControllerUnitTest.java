@@ -51,6 +51,25 @@ public class FluxMonoControllerUnitTest {
                 .expectComplete();
     }
 
+    @Test
+    void flux_approach3() {
+
+        webTestClient
+                .get()
+                .uri("/flux")
+                .exchange()
+                .expectStatus()
+                .is2xxSuccessful()
+                .expectBodyList(Integer.class)
+                .consumeWith(listEntityExchangeResult -> {
+                    var responseBody = listEntityExchangeResult.getResponseBody();
+                    assert (responseBody != null ? responseBody.size() : 0) ==3;
+                });
+
+
+    }
+
+
     /**
      * Copied from approach 2
      */
@@ -72,23 +91,6 @@ public class FluxMonoControllerUnitTest {
                 .verify();
     }
 
-    @Test
-    void flux_approach3() {
-
-        webTestClient
-                .get()
-                .uri("/flux")
-                .exchange()
-                .expectStatus()
-                .is2xxSuccessful()
-                .expectBodyList(Integer.class)
-                .consumeWith(listEntityExchangeResult -> {
-                    var responseBody = listEntityExchangeResult.getResponseBody();
-                    assert (responseBody != null ? responseBody.size() : 0) ==3;
-                });
-
-
-    }
 
     @Test
     void mono() {
