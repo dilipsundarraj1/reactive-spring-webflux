@@ -3,6 +3,7 @@ package com.reactivespring.client;
 import com.reactivespring.domain.Review;
 import com.reactivespring.exception.ReviewsClientException;
 import com.reactivespring.exception.ReviewsServerException;
+import com.reactivespring.util.RetryUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -47,7 +48,8 @@ public class ReviewsRestClient {
                     return clientResponse.bodyToMono(String.class)
                             .flatMap(response -> Mono.error(new ReviewsServerException(response)));
                 }))
-                .bodyToFlux(Review.class);
+                .bodyToFlux(Review.class)
+                .retryWhen(RetryUtil.retrySpec());
 
     }
 
