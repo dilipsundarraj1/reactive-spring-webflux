@@ -1,0 +1,36 @@
+POST-CREATE-MOVIE-INFO
+-----------------------
+curl -i \
+-d '{"movieInfoId":1, "name": "Batman Begins", "year":2005,"cast":["Christian Bale", "Michael Cane"],"release_date": "2005-06-15"}' \
+-H "Content-Type: application/json" \
+-X POST http://localhost:8080/v1/movieinfos
+
+curl -i \
+-d '{"movieInfoId":2, "name": "The Dark Knight", "year":2008,"cast":["Christian Bale", "HeathLedger"],"release_date": "2008-07-18"}' \
+-H "Content-Type: application/json" \
+-X POST http://localhost:8080/v1/movieinfos
+
+curl -i \
+-d '{"movieInfoId":null, "name": "Dark Knight Rises", "year":2012,"cast":["Christian Bale", "Tom Hardy"],"release_date": "2012-07-20"}' \
+-H "Content-Type: application/json" \
+-X POST http://localhost:8080/v1/movieinfos
+
+
+GET-ALL-MOVIE-INFO
+-----------------------
+curl -i http://localhost:8080/v1/movieinfos
+
+GET-MOVIE-INFO-BY-ID
+-----------------------
+curl -i http://localhost:8080/v1/movieinfos/1
+
+UPDATE-MOVIE-INFO
+-----------------------
+curl -i \
+-d '{"movieInfoId":1, "name": "Batman Begins", "year":2005,"cast":["Christian Bale", "Michael Cane", "Liam Neeson"],"release_date": "2005-06-15"}' \
+-H "Content-Type: application/json" \
+-X PUT http://localhost:8080/v1/movieinfos/1
+
+DELETE-MOVIE-INFO
+-----------------------
+curl -i -X DELETE http://localhost:8080/v1/movieinfos/1
