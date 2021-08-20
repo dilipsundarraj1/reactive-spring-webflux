@@ -1,6 +1,7 @@
 package com.reactivespring.controller;
 
 import com.reactivespring.domain.MovieInfo;
+import com.reactivespring.exception.MovieInfoNotfoundException;
 import com.reactivespring.service.MoviesInfoService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -63,6 +64,20 @@ public class MoviesInfoController {
                 .map(movieInfo1 -> ResponseEntity.ok()
                         .body(movieInfo1))
                 .switchIfEmpty(Mono.just(ResponseEntity.notFound().build()));
+
+    }
+
+    @PutMapping("/movieinfos/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<Mono<MovieInfo>> updateMovieInfo_1(@RequestBody MovieInfo movieInfo, @PathVariable String id) {
+
+        var updatedMovieInfoMono =  moviesInfoService.updateMovieInfo(movieInfo, id)
+                .switchIfEmpty(Mono.error(new MovieInfoNotfoundException("MovieInfo Not Found")));
+        return ResponseEntity.ok(updatedMovieInfoMono);
+        /*return updatedMovieInfoMono
+                .map(movieInfo1 -> ResponseEntity.ok()
+                        .body(movieInfo1))
+                .switchIfEmpty(Mono.just(ResponseEntity.notFound().build()));*/
 
     }
 
