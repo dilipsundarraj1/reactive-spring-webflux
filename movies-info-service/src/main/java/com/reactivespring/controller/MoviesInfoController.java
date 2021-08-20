@@ -31,7 +31,7 @@ public class MoviesInfoController {
     }
 */
     @GetMapping("/movieinfos/{id}")
-    public Mono<ResponseEntity<MovieInfo>> getMovieInfoById_approach2(@PathVariable String id) {
+    public Mono<ResponseEntity<MovieInfo>> getMovieInfoById_approach2(@PathVariable("id") String id) {
 
         return moviesInfoService.getMovieInfoById(id)
                 .map(movieInfo1 -> ResponseEntity.ok()
@@ -49,12 +49,8 @@ public class MoviesInfoController {
 
    /* @PutMapping("/movieinfos/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Mono<MovieInfo> updateMovieInfo(@RequestBody MovieInfo movieInfo, @PathVariable String id, ServerHttpResponse serverHttpResponse) {
+    public Mono<MovieInfo> updateMovieInfo(@RequestBody MovieInfo movieInfo, @PathVariable String id) {
 
-          *//*    ()->{
-                    serverHttpResponse.setStatusCode(HttpStatus.NOT_FOUND);
-
-                }*//*
         return moviesInfoService.updateMovieInfo(movieInfo, id);
     }*/
 
