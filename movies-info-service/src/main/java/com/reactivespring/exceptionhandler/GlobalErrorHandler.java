@@ -1,5 +1,6 @@
 package com.reactivespring.exceptionhandler;
 
+import com.reactivespring.exception.MovieInfoNotfoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,12 @@ public class GlobalErrorHandler {
                 .collect(Collectors.joining(","));
         log.error("errorList : {}", error);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    }
+
+    @ExceptionHandler(MovieInfoNotfoundException.class)
+    public ResponseEntity<String> handleMovieInfoNotfoundException(MovieInfoNotfoundException ex){
+        log.error("Exception caught in handleMovieInfoNotfoundException :  {} " ,ex.getMessage(),  ex);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
 
 }

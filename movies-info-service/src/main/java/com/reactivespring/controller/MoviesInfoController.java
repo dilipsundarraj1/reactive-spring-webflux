@@ -3,6 +3,7 @@ package com.reactivespring.controller;
 import com.reactivespring.domain.MovieInfo;
 import com.reactivespring.exception.MovieInfoNotfoundException;
 import com.reactivespring.service.MoviesInfoService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +14,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/v1")
+@Slf4j
 public class MoviesInfoController {
 
     private MoviesInfoService moviesInfoService;
@@ -67,12 +69,14 @@ public class MoviesInfoController {
 
     }
 
-    @PutMapping("/movieinfos/{id}")
+    @PutMapping("/movieinfos_1/{id}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Mono<MovieInfo>> updateMovieInfo_1(@RequestBody MovieInfo movieInfo, @PathVariable String id) {
 
         var updatedMovieInfoMono =  moviesInfoService.updateMovieInfo(movieInfo, id)
-                .switchIfEmpty(Mono.error(new MovieInfoNotfoundException("MovieInfo Not Found")));
+                .switchIfEmpty(Mono.error(new MovieInfoNotfoundException("MovieInfo Not Found!")))
+                .log();
+        log.info("Before sending the response");
         return ResponseEntity.ok(updatedMovieInfoMono);
         /*return updatedMovieInfoMono
                 .map(movieInfo1 -> ResponseEntity.ok()
