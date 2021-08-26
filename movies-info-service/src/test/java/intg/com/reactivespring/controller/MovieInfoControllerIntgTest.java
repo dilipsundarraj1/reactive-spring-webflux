@@ -9,6 +9,7 @@ import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWeb
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -55,6 +56,23 @@ public class MovieInfoControllerIntgTest {
                 .is2xxSuccessful()
                 .expectBodyList(MovieInfo.class)
                 .hasSize(3);
+    }
+
+    @Test
+    void getMovieInfoByYear() {
+        var uri = UriComponentsBuilder.fromUriString(MOVIES_INFO_URL)
+                .queryParam("year", 2005)
+                .buildAndExpand().toUri();
+
+        webTestClient
+                .get()
+                .uri(uri)
+                .exchange()
+                .expectStatus()
+                .is2xxSuccessful()
+                .expectBodyList(MovieInfo.class)
+                .hasSize(1);
+
     }
 
     @Test
@@ -126,6 +144,8 @@ public class MovieInfoControllerIntgTest {
         .jsonPath("$.name").isEqualTo("Dark Knight Rises");
 
     }
+
+
 
     @Test
     void getMovieInfoById_1() {
