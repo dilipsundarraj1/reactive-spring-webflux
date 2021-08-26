@@ -31,3 +31,7 @@ spring:
       host: localhost
       port: 27017
       database: local
+---
+logging:
+  level:
+    root: debug
