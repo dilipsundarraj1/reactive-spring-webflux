@@ -27,14 +27,15 @@ public class ReviewsHandler {
     @Autowired
     private Validator validator;
 
+    public ReviewsHandler(ReviewReactiveRepository reviewReactiveRepository) {
+        this.reviewReactiveRepository = reviewReactiveRepository;
+    }
 
  /*    public ReviewsHandler(ReviewReactiveRepository reviewReactiveRepository, ReviewValidator reviewValidator) {
         this.reviewReactiveRepository = reviewReactiveRepository;
         this.reviewValidator = reviewValidator;
     }*/
-   /* public ReviewsHandler(ReviewReactiveRepository reviewReactiveRepository) {
-        this.reviewReactiveRepository = reviewReactiveRepository;
-    }*/
+
 
     static Mono<ServerResponse> notFound = ServerResponse.notFound().build();
 
@@ -81,6 +82,7 @@ public class ReviewsHandler {
         if(constraintViolations.size() >0){
             var errorMessage = constraintViolations.stream()
                     .map(ConstraintViolation::getMessage)
+                    .sorted()
                     .collect(Collectors.joining(", "));
             log.info("errorMessage : {} ", errorMessage);
             throw new ReviewDataException(errorMessage);

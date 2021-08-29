@@ -118,39 +118,6 @@ public class ReviewsIntgTest {
 
     }
 
-   /* @Test
-    void addReview_null_inputValidations() {
-        //given
-        var review = new Review(null, null, "Awesome Movie", -9.0);
-        //when
-        webTestClient
-                .post()
-                .uri("/v1/reviews")
-                .bodyValue(review)
-                .exchange()
-                .expectStatus().isBadRequest()
-                .expectBody(String.class)
-                .isEqualTo("rating.negative : please pass a non-negative value, rating.movieInfoId : must not be null");
-
-    }*/
-
-    @Test
-    void addReview_negative_rating_inputValidations() {
-        //given
-        var review = new Review(null, 1L, "Awesome Movie", -9.00);
-        //when
-        webTestClient
-                .post()
-                .uri("/v1/reviews")
-                .bodyValue(review)
-                .exchange()
-                .expectStatus().isBadRequest()
-                .expectBody(String.class)
-                .isEqualTo("rating.negative : rating is negative and please pass a non-negative value");
-
-    }
-
-
     @Test
     void updateReview() {
         //given

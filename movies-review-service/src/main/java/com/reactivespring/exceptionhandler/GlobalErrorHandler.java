@@ -29,7 +29,6 @@ public class GlobalErrorHandler implements ErrorWebExceptionHandler {
             return exchange.getResponse().writeWith(Mono.just(errorMessage));
         }
 
-
         exchange.getResponse().setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR);
         return exchange.getResponse().writeWith(Mono.just(errorMessage));
     }

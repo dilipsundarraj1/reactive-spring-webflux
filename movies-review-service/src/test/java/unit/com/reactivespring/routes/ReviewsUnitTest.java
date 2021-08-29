@@ -86,6 +86,22 @@ public class ReviewsUnitTest {
     }
 
     @Test
+    void addReview_Validations() {
+        //given
+        var review = new Review(null, null, "Awesome Movie", -9.0);
+        //when
+        webTestClient
+                .post()
+                .uri("/v1/reviews")
+                .bodyValue(review)
+                .exchange()
+                .expectStatus().isBadRequest()
+                .expectBody(String.class)
+                .isEqualTo("rating.movieInfoId : must not be null, rating.negative : please pass a non-negative value");
+
+    }
+
+    @Test
     void updateReview() {
         //given
 
@@ -128,22 +144,6 @@ public class ReviewsUnitTest {
                 .uri("/v1/reviews/{id}", reviewId)
                 .exchange()
                 .expectStatus().isNoContent();
-    }
-
-    @Test
-    void addReview_null_inputValidations() {
-        //given
-        var review = new Review(null, null, "Awesome Movie", -9.0);
-        //when
-        webTestClient
-                .post()
-                .uri("/v1/reviews")
-                .bodyValue(review)
-                .exchange()
-                .expectStatus().isBadRequest()
-                .expectBody(String.class)
-                .isEqualTo("rating.negative : please pass a non-negative value, rating.movieInfoId : must not be null");
-
     }
 
 
