@@ -1,6 +1,7 @@
 package com.reactivespring.routes;
 
 import com.reactivespring.domain.Review;
+import com.reactivespring.exceptionhandler.GlobalErrorHandler;
 import com.reactivespring.handler.ReviewsHandler;
 import com.reactivespring.repository.ReviewReactiveRepository;
 import com.reactivespring.validator.ReviewValidator;
@@ -21,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 
 @WebFluxTest
-@ContextConfiguration(classes = {ReviewRouter.class, ReviewsHandler.class})
+@ContextConfiguration(classes = {ReviewRouter.class, ReviewsHandler.class, GlobalErrorHandler.class})
 @AutoConfigureWebTestClient
 public class ReviewsUnitTest {
 
@@ -81,6 +82,22 @@ public class ReviewsUnitTest {
                     assertEquals("abc", savedReview.getReviewId());
 
                 });
+
+    }
+
+    @Test
+    void addReview_Validations() {
+        //given
+        var review = new Review(null, null, "Awesome Movie", -9.0);
+        //when
+        webTestClient
+                .post()
+                .uri("/v1/reviews")
+                .bodyValue(review)
+                .exchange()
+                .expectStatus().isBadRequest()
+                .expectBody(String.class)
+                .isEqualTo("rating.movieInfoId : must not be null, rating.negative : please pass a non-negative value");
 
     }
 

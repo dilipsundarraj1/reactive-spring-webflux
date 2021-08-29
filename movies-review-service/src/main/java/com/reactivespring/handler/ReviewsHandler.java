@@ -5,6 +5,7 @@ import com.reactivespring.exception.ReviewDataException;
 import com.reactivespring.repository.ReviewReactiveRepository;
 import com.reactivespring.validator.ReviewValidator;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BeanPropertyBindingResult;
@@ -13,25 +14,28 @@ import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.Validator;
 import java.util.stream.Collectors;
 
 @Component
 @Slf4j
 public class ReviewsHandler {
     private ReviewReactiveRepository reviewReactiveRepository;
-    private ReviewValidator reviewValidator;
+    //private ReviewValidator reviewValidator;
 
-    /*@Autowired
-    private Validator validator;*/
+    @Autowired
+    private Validator validator;
 
+    public ReviewsHandler(ReviewReactiveRepository reviewReactiveRepository) {
+        this.reviewReactiveRepository = reviewReactiveRepository;
+    }
 
-     public ReviewsHandler(ReviewReactiveRepository reviewReactiveRepository, ReviewValidator reviewValidator) {
+ /*    public ReviewsHandler(ReviewReactiveRepository reviewReactiveRepository, ReviewValidator reviewValidator) {
         this.reviewReactiveRepository = reviewReactiveRepository;
         this.reviewValidator = reviewValidator;
-    }
-   /* public ReviewsHandler(ReviewReactiveRepository reviewReactiveRepository) {
-        this.reviewReactiveRepository = reviewReactiveRepository;
     }*/
+
 
     static Mono<ServerResponse> notFound = ServerResponse.notFound().build();
 
@@ -62,7 +66,7 @@ public class ReviewsHandler {
 
     private void validate(Review review) {
         Errors errors = new BeanPropertyBindingResult(review, "review");
-        reviewValidator.validate(review, errors);
+       /* reviewValidator.validate(review, errors);
         if (errors.hasErrors()) {
             var errorMessage = errors.getAllErrors()
                     .stream()
@@ -71,17 +75,18 @@ public class ReviewsHandler {
                     .collect(Collectors.joining(", "));
             log.info("errorMessage : {} ", errorMessage);
             throw new ReviewDataException(errorMessage);
-        }
+        }*/
 
-      /*  var constraintViolations = validator.validate(review);
+        var constraintViolations = validator.validate(review);
         log.info("constraintViolations : {} ", constraintViolations);
         if(constraintViolations.size() >0){
             var errorMessage = constraintViolations.stream()
                     .map(ConstraintViolation::getMessage)
+                    .sorted()
                     .collect(Collectors.joining(", "));
             log.info("errorMessage : {} ", errorMessage);
             throw new ReviewDataException(errorMessage);
-        }*/
+        }
     }
 
     public Mono<ServerResponse> updateReview(ServerRequest serverRequest) {
