@@ -74,22 +74,6 @@ public class MoviesInfoController {
 
     }
 
-    @PutMapping("/movieinfos_1/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<Mono<MovieInfo>> updateMovieInfo_1(@RequestBody MovieInfo movieInfo, @PathVariable String id) {
-
-        var updatedMovieInfoMono =  moviesInfoService.updateMovieInfo(movieInfo, id)
-                .switchIfEmpty(Mono.error(new MovieInfoNotfoundException("MovieInfo Not Found!")))
-                .log();
-        log.info("Before sending the response");
-        return ResponseEntity.ok(updatedMovieInfoMono);
-        /*return updatedMovieInfoMono
-                .map(movieInfo1 -> ResponseEntity.ok()
-                        .body(movieInfo1))
-                .switchIfEmpty(Mono.just(ResponseEntity.notFound().build()));*/
-
-    }
-
     @DeleteMapping("/movieinfos/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public Mono<Void> deleteMovieInfoById(@PathVariable String id){
