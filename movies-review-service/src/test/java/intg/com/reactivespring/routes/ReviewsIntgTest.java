@@ -118,10 +118,10 @@ public class ReviewsIntgTest {
 
     }
 
-    @Test
+   /* @Test
     void addReview_null_inputValidations() {
         //given
-        var review = new Review(null, null, "Awesome Movie", null);
+        var review = new Review(null, null, "Awesome Movie", -9.0);
         //when
         webTestClient
                 .post()
@@ -130,9 +130,9 @@ public class ReviewsIntgTest {
                 .exchange()
                 .expectStatus().isBadRequest()
                 .expectBody(String.class)
-                .isEqualTo("movieInfoId.null : Pass a valid movieInfoId, rating.null : Pass a valid rating");
+                .isEqualTo("rating.negative : please pass a non-negative value, rating.movieInfoId : must not be null");
 
-    }
+    }*/
 
     @Test
     void addReview_negative_rating_inputValidations() {
