@@ -24,7 +24,7 @@ public class MoviesInfoRestClient {
         this.webClient = webClient;
     }
 
-    public Mono<MovieInfo> retrieveMovieInfo(String movieId){
+    public Mono<MovieInfo> retrieveMovieInfo(String movieId) {
 
         var url = moviesInfoUrl.concat("/{id}");
         /*var retrySpec = RetrySpec.fixedDelay(3, Duration.ofSeconds(1))
@@ -36,10 +36,10 @@ public class MoviesInfoRestClient {
                 .retrieve()
                 .onStatus(HttpStatus::is4xxClientError, (clientResponse -> {
                     log.info("Status code : {}", clientResponse.statusCode().value());
-                    if(clientResponse.statusCode().equals(HttpStatus.NOT_FOUND)){
-                        return Mono.error(new MoviesInfoClientException("There is no MovieInfo available for the passed in Id : "+ movieId, clientResponse.statusCode().value()));
+                    if (clientResponse.statusCode().equals(HttpStatus.NOT_FOUND)) {
+                        return Mono.error(new MoviesInfoClientException("There is no MovieInfo available for the passed in Id : " + movieId, clientResponse.statusCode().value()));
                     }
-                   return clientResponse.bodyToMono(String.class)
+                    return clientResponse.bodyToMono(String.class)
                             .flatMap(response -> Mono.error(new MoviesInfoClientException(response, clientResponse.statusCode().value())));
                 }))
                 .onStatus(HttpStatus::is5xxServerError, (clientResponse -> {
@@ -54,17 +54,23 @@ public class MoviesInfoRestClient {
 
     }
 
-    public Mono<MovieInfo> retrieveMovieInfo_exchange(String movieId){
+    public Mono<MovieInfo> retrieveMovieInfo_exchange(String movieId) {
 
         var url = moviesInfoUrl.concat("/{id}");
-        /*var retrySpec = RetrySpec.fixedDelay(3, Duration.ofSeconds(1))
-                .filter((ex) -> ex instanceof MoviesInfoServerException)
-                .onRetryExhaustedThrow(((retryBackoffSpec, retrySignal) -> Exceptions.propagate(retrySignal.failure())));*/
 
         return webClient.get()
                 .uri(url, movieId)
                 .exchangeToMono(clientResponse -> {
-                    return  clientResponse.bodyToMono(MovieInfo.class);
+
+                    switch (clientResponse.statusCode()) {
+                        case OK:
+                            return clientResponse.bodyToMono(MovieInfo.class);
+                        case NOT_FOUND:
+                            return Mono.error(new MoviesInfoClientException("There is no MovieInfo available for the passed in Id : " + movieId, clientResponse.statusCode().value()));
+                        default:
+                            return clientResponse.bodyToMono(String.class)
+                                    .flatMap(response -> Mono.error(new MoviesInfoServerException(response)));
+                    }
                 })
                 .retryWhen(RetryUtil.retrySpec())
                 .log();
