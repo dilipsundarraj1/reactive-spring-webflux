@@ -25,6 +25,7 @@ public class MoviesController {
     public Mono<Movie> retrieveMovieById(@PathVariable("id") String movieId){
 
         return moviesInfoRestClient.retrieveMovieInfo(movieId)
+                //moviesInfoRestClient.retrieveMovieInfo_exchange(movieId)
                 .flatMap(movieInfo -> {
                     var reviewList = reviewsRestClient.retrieveReviews(movieId)
                             .collectList();
