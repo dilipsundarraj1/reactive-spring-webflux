@@ -54,6 +54,23 @@ public class MoviesInfoRestClient {
 
     }
 
+    public Mono<MovieInfo> retrieveMovieInfo_exchange(String movieId){
+
+        var url = moviesInfoUrl.concat("/{id}");
+        /*var retrySpec = RetrySpec.fixedDelay(3, Duration.ofSeconds(1))
+                .filter((ex) -> ex instanceof MoviesInfoServerException)
+                .onRetryExhaustedThrow(((retryBackoffSpec, retrySignal) -> Exceptions.propagate(retrySignal.failure())));*/
+
+        return webClient.get()
+                .uri(url, movieId)
+                .exchangeToMono(clientResponse -> {
+                    return  clientResponse.bodyToMono(MovieInfo.class);
+                })
+                .retryWhen(RetryUtil.retrySpec())
+                .log();
+
+    }
+
 
 }
 
