@@ -79,7 +79,7 @@ public class ReviewsHandler {
 
         var constraintViolations = validator.validate(review);
         log.info("constraintViolations : {} ", constraintViolations);
-        if(constraintViolations.size() >0){
+        if (constraintViolations.size() > 0) {
             var errorMessage = constraintViolations.stream()
                     .map(ConstraintViolation::getMessage)
                     .sorted()
@@ -94,7 +94,7 @@ public class ReviewsHandler {
         var reviewId = serverRequest.pathVariable("id");
 
         var existingReview = reviewReactiveRepository.findById(reviewId);
-                //.switchIfEmpty(Mono.error(new ReviewNotFoundException("Review not Found for the given Review Id")));
+        //.switchIfEmpty(Mono.error(new ReviewNotFoundException("Review not Found for the given Review Id")));
 
         return existingReview
                 .flatMap(review -> serverRequest.bodyToMono(Review.class)
@@ -115,10 +115,8 @@ public class ReviewsHandler {
     public Mono<ServerResponse> deleteReview(ServerRequest serverRequest) {
         var reviewId = serverRequest.pathVariable("id");
         return reviewReactiveRepository.findById(reviewId)
-                .flatMap(review -> {
-                    reviewReactiveRepository.deleteById(reviewId);
-                    return ServerResponse.noContent().build();
-                })
+                .flatMap(review -> reviewReactiveRepository.deleteById(reviewId)
+                        .flatMap(rev -> ServerResponse.noContent().build()))
                 .switchIfEmpty(notFound);
 
     }
