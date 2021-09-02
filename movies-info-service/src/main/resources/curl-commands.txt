@@ -34,3 +34,8 @@ curl -i \
 DELETE-MOVIE-INFO
 -----------------------
 curl -i -X DELETE http://localhost:8080/v1/movieinfos/1
+
+
+STREAM-MOVIE-INFO
+-----------------------
+curl -i http://localhost:8080/v1/movieinfos/stream
