@@ -3,7 +3,6 @@ package com.reactivespring.handler;
 import com.reactivespring.domain.Review;
 import com.reactivespring.exception.ReviewDataException;
 import com.reactivespring.repository.ReviewReactiveRepository;
-import com.reactivespring.validator.ReviewValidator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
