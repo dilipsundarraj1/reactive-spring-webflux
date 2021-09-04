@@ -46,7 +46,6 @@ public class SinksTest {
 
     @Test
     void sink_multicast() throws InterruptedException {
-        //given
 
         //when
 
