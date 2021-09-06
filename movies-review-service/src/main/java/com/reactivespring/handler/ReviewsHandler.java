@@ -121,21 +121,10 @@ public class ReviewsHandler {
     }
 
     public Mono<ServerResponse> deleteReview(ServerRequest serverRequest) {
-        log.info("Inside deleteReview");
         var reviewId = serverRequest.pathVariable("id");
         return reviewReactiveRepository.findById(reviewId)
-                .flatMap(review -> reviewReactiveRepository.deleteById(reviewId)
-                        .log()
-                        .flatMap(rev -> {
-                            log.info("After delete");
-                            return ServerResponse.noContent().build();
-                        }))
-                .flatMap(rev -> {
-                    log.info("After delete");
-                    return ServerResponse.noContent().build();
-                })
-                .then(ServerResponse.noContent().build())
-                .log();
+                .flatMap(review -> reviewReactiveRepository.deleteById(reviewId))
+                .then(ServerResponse.noContent().build());
 
     }
 
