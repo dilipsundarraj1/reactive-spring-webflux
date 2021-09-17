@@ -10,15 +10,18 @@ import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWeb
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import reactor.test.StepVerifier;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
-@AutoConfigureWebTestClient(timeout = "60000000")
+@AutoConfigureWebTestClient
 public class ReviewsIntgTest {
 
     @Autowired
@@ -26,6 +29,8 @@ public class ReviewsIntgTest {
 
     @Autowired
     ReviewReactiveRepository reviewReactiveRepository;
+
+    static String REVIEWS_URL = "/v1/reviews";
 
     @BeforeEach
     void setUp() {
@@ -64,7 +69,7 @@ public class ReviewsIntgTest {
         //when
         webTestClient
                 .get()
-                .uri("/v1/reviews")
+                .uri(REVIEWS_URL)
                 .exchange()
                 .expectStatus()
                 .is2xxSuccessful()
@@ -76,6 +81,44 @@ public class ReviewsIntgTest {
     }
 
     @Test
+    void getReviews_Stream() {
+
+        var review = new Review(null, 1L, "Awesome Movie", 9.0);
+
+        webTestClient
+                .post()
+                .uri(REVIEWS_URL)
+                .bodyValue(review)
+                .exchange()
+                .expectStatus()
+                .isCreated()
+                .expectBody(Review.class)
+                .consumeWith(movieInfoEntityExchangeResult -> {
+                    var savedReview = movieInfoEntityExchangeResult.getResponseBody();
+                    assert Objects.requireNonNull(savedReview).getReviewId() != null;
+
+                });
+
+        var reviewStreamFlux = webTestClient
+                .get()
+                .uri(REVIEWS_URL + "/stream")
+                .exchange()
+                .expectStatus()
+                .is2xxSuccessful()
+                .returnResult(Review.class)
+                .getResponseBody();
+
+        StepVerifier.create(reviewStreamFlux)
+                .assertNext(rev -> {
+                    assert rev.getReviewId()!=null;
+                })
+                .thenCancel()
+                .verify();
+
+    }
+
+
+    @Test
     void getReviewsByMovieInfoId() {
         //given
 
@@ -83,7 +126,7 @@ public class ReviewsIntgTest {
         webTestClient
                 .get()
                 .uri(uriBuilder -> {
-                    return uriBuilder.path("/v1/reviews")
+                    return uriBuilder.path(REVIEWS_URL)
                             .queryParam("movieInfoId", "1")
                             .build();
                 })
@@ -105,7 +148,7 @@ public class ReviewsIntgTest {
         //when
         webTestClient
                 .post()
-                .uri("/v1/reviews")
+                .uri(REVIEWS_URL)
                 .bodyValue(review)
                 .exchange()
                 .expectStatus().isCreated()
@@ -129,7 +172,7 @@ public class ReviewsIntgTest {
 
         webTestClient
                 .put()
-                .uri("/v1/reviews/{id}", savedReview.getReviewId())
+                .uri(REVIEWS_URL+"/{id}", savedReview.getReviewId())
                 .bodyValue(reviewUpdate)
                 .exchange()
                 .expectStatus().isOk()
@@ -152,7 +195,7 @@ public class ReviewsIntgTest {
         //when
         webTestClient
                 .put()
-                .uri("/v1/reviews/{id}", "abc")
+                .uri(REVIEWS_URL+"/{id}", "abc")
                 .bodyValue(reviewUpdate)
                 .exchange()
                 .expectStatus().isNotFound();
@@ -167,36 +210,9 @@ public class ReviewsIntgTest {
         assert savedReview != null;
         webTestClient
                 .delete()
-                .uri("/v1/reviews/{id}", savedReview.getReviewId())
+                .uri(REVIEWS_URL+"/{id}", savedReview.getReviewId())
                 .exchange()
                 .expectStatus().isNoContent();
     }
-
-    @Test
-    void deleteReview_notFound() {
-        //given
-        //when
-        webTestClient
-                .delete()
-                .uri("/v1/reviews/{id}", "123")
-                .exchange()
-                .expectStatus().isNotFound();
-    }
-
-    @Test
-    void error() {
-        //given
-
-        //when
-
-        webTestClient
-                .get()
-                .uri("/v1/error")
-                .exchange()
-                .expectStatus()
-                .is5xxServerError();
-
-    }
-
 
 }

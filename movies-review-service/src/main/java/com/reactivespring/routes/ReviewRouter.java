@@ -20,12 +20,10 @@ public class ReviewRouter {
                                 .GET("", reviewsHandler::getReviews)
                                 .POST("", reviewsHandler::addReview)
                                 .PUT("/{id}", reviewsHandler::updateReview)
-                                .DELETE("/{id}", reviewsHandler::deleteReview))
+                                .DELETE("/{id}", reviewsHandler::deleteReview)
+                                .GET("/stream", reviewsHandler::getReviewsStream))
                 .GET("/v1/helloworld", (request -> ServerResponse.ok().bodyValue("HelloWorld")))
                 .GET("/v1/greeting/{name}", (request -> ServerResponse.ok().bodyValue("hello " + request.pathVariable("name"))))
-                .GET("/v1/error", (request -> {
-                    throw new RuntimeException("Exception Occurred");
-                }))
                 //  .GET("/v1/reviews",reviewsHandler::getReviews)
                // .POST("/v1/reviews", reviewsHandler::addReview)
                 .build();
