@@ -2,6 +2,7 @@ package com.reactivespring.handler;
 
 import com.reactivespring.domain.Review;
 import com.reactivespring.exception.ReviewDataException;
+import com.reactivespring.exception.ReviewNotFoundException;
 import com.reactivespring.repository.ReviewReactiveRepository;
 import com.reactivespring.validator.ReviewValidator;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +14,7 @@ import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.core.publisher.Sinks;
 
@@ -47,15 +49,17 @@ public class ReviewsHandler {
     public Mono<ServerResponse> getReviews(ServerRequest serverRequest) {
         var movieInfoId = serverRequest.queryParam("movieInfoId");
         if (movieInfoId.isPresent()) {
-            System.out.println("Inside if present");
             var reviews = reviewReactiveRepository.findReviewsByMovieInfoId(Long.valueOf(movieInfoId.get()));
-            return ServerResponse.ok()
-                    .body(reviews, Review.class);
+            return buildReviewsResponse(reviews);
         } else {
             var reviews = reviewReactiveRepository.findAll();
-            return ServerResponse.ok()
-                    .body(reviews, Review.class);
+            return buildReviewsResponse(reviews);
         }
+    }
+
+    private Mono<ServerResponse> buildReviewsResponse(Flux<Review> reviews) {
+        return ServerResponse.ok()
+                .body(reviews, Review.class);
     }
 
     public Mono<ServerResponse> addReview(ServerRequest serverRequest) {
@@ -114,8 +118,7 @@ public class ReviewsHandler {
                         .flatMap(savedReview ->
                                 ServerResponse.status(HttpStatus.OK)
                                         .bodyValue(savedReview)))
-                .switchIfEmpty(notFound)
-                .log();
+                .switchIfEmpty(notFound);
 
 
     }
