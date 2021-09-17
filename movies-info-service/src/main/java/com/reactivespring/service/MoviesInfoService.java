@@ -13,7 +13,6 @@ import reactor.core.publisher.Mono;
 @Slf4j
 public class MoviesInfoService {
 
-    private ConnectableFlux<ServerSentEvent<String>> eventPublisher;
 
     private MovieInfoRepository movieInfoRepository;
 
@@ -34,9 +33,6 @@ public class MoviesInfoService {
     public Mono<MovieInfo> addMovieInfo(MovieInfo movieInfo) {
         log.info("addMovieInfo : {} " , movieInfo );
         return movieInfoRepository.save(movieInfo)
-                .doOnNext(movieInfo1 -> {
-
-                })
                 .log();
     }
 
