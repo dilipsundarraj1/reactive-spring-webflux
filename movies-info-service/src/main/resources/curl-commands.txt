@@ -24,6 +24,10 @@ GET-MOVIE-INFO-BY-ID
 -----------------------
 curl -i http://localhost:8080/v1/movieinfos/1
 
+GET-MOVIE-INFO-STREAM
+-----------------------
+curl -i http://localhost:8080/v1/movieinfos/stream
+
 UPDATE-MOVIE-INFO
 -----------------------
 curl -i \
@@ -34,3 +38,8 @@ curl -i \
 DELETE-MOVIE-INFO
 -----------------------
 curl -i -X DELETE http://localhost:8080/v1/movieinfos/1
+
+
+STREAM-MOVIE-INFO
+-----------------------
+curl -i http://localhost:8080/v1/movieinfos/stream
