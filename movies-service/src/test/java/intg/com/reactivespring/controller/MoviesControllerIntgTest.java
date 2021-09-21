@@ -90,6 +90,31 @@ public class MoviesControllerIntgTest {
        // WireMock.verify(4, getRequestedFor(urlEqualTo("/v1/movieinfos/" + movieId)));;
     }
 
+
+    @Test
+    void retrieveMovieById_Reviews_404() {
+        //given
+        var movieId = "abc";
+        stubFor(get(urlEqualTo("/v1/movieinfos/" + movieId))
+                .willReturn(aResponse()
+                        .withHeader("Content-Type", "application/json")
+                        .withBodyFile("movieinfo.json")));
+
+        stubFor(get(urlPathEqualTo("/v1/reviews"))
+                .withQueryParam("movieInfoId", equalTo(movieId))
+                .willReturn(aResponse()
+                        .withStatus(404)));
+
+
+        //when
+        webTestClient.get()
+                .uri("/v1/movies/{id}", "abc")
+                .exchange()
+                .expectStatus().is2xxSuccessful();
+        //then
+        // WireMock.verify(4, getRequestedFor(urlEqualTo("/v1/movieinfos/" + movieId)));;
+    }
+
     @Test
     void retrieveMovieById_5XX() {
         //given
