@@ -19,12 +19,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
+@AutoConfigureWebClient
 @AutoConfigureWireMock(port = 8084) // automaticaly spins up a httpserver in port 8084
 @TestPropertySource(properties = {
         "restClient.moviesInfoUrl=http://localhost:8084/v1/movieinfos",
         "restClient.reviewsUrl=http://localhost:8084/v1/reviews",
 })
-@AutoConfigureWebClient
 public class MoviesControllerIntgTest {
 
     @Autowired
@@ -45,11 +45,11 @@ public class MoviesControllerIntgTest {
                         .withHeader("Content-Type", "application/json")
                         .withBodyFile("movieinfo.json")));
 
-        stubFor(get(urlPathEqualTo("/v1/reviews"))
+       /* stubFor(get(urlPathEqualTo("/v1/reviews"))
                 .withQueryParam("movieInfoId", equalTo(movieId))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
-                        .withBodyFile("reviews.json")));
+                        .withBodyFile("reviews.json")));*/
 
 
         //when
