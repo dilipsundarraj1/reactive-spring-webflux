@@ -12,6 +12,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.util.retry.Retry;
+
+import java.time.Duration;
 
 @Component
 @Slf4j
@@ -50,7 +53,8 @@ public class MoviesInfoRestClient {
                             .flatMap(response -> Mono.error(new MoviesInfoServerException(response)));
                 }))
                 .bodyToMono(MovieInfo.class)
-                //.retry(3)
+               //.retry(3)
+                //.retryWhen(Retry.fixedDelay(3, Duration.ofMillis(500)))
                 .retryWhen(RetryUtil.retrySpec())
                 .log();
 
