@@ -45,11 +45,11 @@ public class MoviesControllerIntgTest {
                         .withHeader("Content-Type", "application/json")
                         .withBodyFile("movieinfo.json")));
 
-       /* stubFor(get(urlPathEqualTo("/v1/reviews"))
+        stubFor(get(urlPathEqualTo("/v1/reviews"))
                 .withQueryParam("movieInfoId", equalTo(movieId))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
-                        .withBodyFile("reviews.json")));*/
+                        .withBodyFile("reviews.json")));
 
 
         //when
