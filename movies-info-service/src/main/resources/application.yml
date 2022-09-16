@@ -1,6 +1,9 @@
 spring:
   profiles:
     active: local
+  mongodb:
+    embedded:
+      version: 4.0.21
 ---
 spring:
   config:
