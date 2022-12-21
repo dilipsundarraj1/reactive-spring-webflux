@@ -31,7 +31,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo:4.3.3'
+	implementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo:4.3.3'
 	testImplementation 'io.projectreactor:reactor-test'
 }
 
