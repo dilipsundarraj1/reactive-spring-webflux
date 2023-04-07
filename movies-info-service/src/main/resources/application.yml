@@ -1,14 +1,10 @@
 spring:
-  profiles:
-    active: local
+  config:
+    activate:
+      on-profile: test
   mongodb:
     embedded:
       version: 4.0.21
----
-spring:
-  config:
-    activate:
-      on-profile: local
   data:
     mongodb:
       host: localhost
