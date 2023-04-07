@@ -1,7 +1,7 @@
 spring:
   config:
     activate:
-      on-profile: test, local
+      on-profile: "test"
   mongodb:
     embedded:
       version: 4.0.21
@@ -14,7 +14,7 @@ spring:
 spring:
   config:
     activate:
-      on-profile: nonprod
+      on-profile: "!prod"
   data:
     mongodb:
       host: localhost
@@ -24,7 +24,7 @@ spring:
 spring:
   config:
     activate:
-      on-profile: prod
+      on-profile: "prod"
   data:
     mongodb:
       host: localhost
