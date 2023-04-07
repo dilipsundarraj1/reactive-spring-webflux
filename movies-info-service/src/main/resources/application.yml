@@ -1,7 +1,7 @@
 spring:
   config:
     activate:
-      on-profile: test
+      on-profile: test, local
   mongodb:
     embedded:
       version: 4.0.21
