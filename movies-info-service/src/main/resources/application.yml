@@ -1,6 +1,7 @@
+logging:
+  level:
+    root: info
 spring:
-  profiles:
-    active: local
   mongodb:
     embedded:
       version: 4.0.21
@@ -8,7 +9,7 @@ spring:
 spring:
   config:
     activate:
-      on-profile: local
+      on-profile: "local"
   data:
     mongodb:
       host: localhost
@@ -18,7 +19,7 @@ spring:
 spring:
   config:
     activate:
-      on-profile: nonprod
+      on-profile: "!prod"
   data:
     mongodb:
       host: localhost
@@ -28,13 +29,9 @@ spring:
 spring:
   config:
     activate:
-      on-profile: prod
+      on-profile: "prod"
   data:
     mongodb:
       host: localhost
       port: 27017
       database: local
----
-logging:
-  level:
-    root: info
