@@ -1,6 +1,8 @@
 server:
   port: 8081
 spring:
-  mongodb:
-    embedded:
-      version: 4.0.21
+    profiles:
+      active: local
+    mongodb:
+      embedded:
+        version: 4.0.21
